@@ -1,11 +1,35 @@
+'use client'
+
 import { GoogleSignInButton, PrimaryFullButton } from "@/components/buttons";
 import { PrimaryInput } from "@/components/inputs";
-import { LabelMd, LabelSm } from "@/components/labels";
+import { LabelSm } from "@/components/labels";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
+import React from "react";
 
 
 
 export default function LoginPage() {
+
+    async function handleLogin(event: React.SyntheticEvent) {
+        event.preventDefault()
+        const target = event.target as typeof event.target & {email: {value: string}, password: {value: string}}
+        try {
+            const response = await signIn("credentials", {
+                redirect: false,
+                email: target.email.value,
+                password: target.password.value,
+                callbackUrl: "/"
+            })
+            if (!response?.error) {
+                document.location.replace("/")
+            } else {
+                alert("Salah bos...")
+            }
+        } catch(err) {
+            console.log(err)
+        }
+    }
     return (
         <>
             <div className="flex justify-center items-center h-screen">
@@ -13,14 +37,14 @@ export default function LoginPage() {
                     <div className="flex justify-center text-xl p-3 font-sans">
                         <span>Login</span>
                     </div>
-                    <form className="flex flex-col gap-4 w-72">
+                    <form className="flex flex-col gap-4 w-72" onSubmit={(e) => handleLogin(e)}>
                         <div className="flex flex-col gap-4">
                             <LabelSm>Email</LabelSm>
-                            <PrimaryInput type="email" />
+                            <PrimaryInput type="email" name="email" />
                         </div>
                         <div className="flex flex-col gap-4">
                             <LabelSm>Password</LabelSm>
-                            <PrimaryInput type="password" />
+                            <PrimaryInput type="password" name="password" />
                         </div>
                         <div className="flex flex-col py-3">
                             <PrimaryFullButton>Login</PrimaryFullButton>
