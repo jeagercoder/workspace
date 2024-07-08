@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { signOut } from "next-auth/react";
 
 
 import { SquareIcon, BellIcon } from "../icons";
@@ -34,7 +35,9 @@ export default function Navbar() {
                                 <ul className="absolute flex flex-col bg-white p-2 right-3 border">
                                     <li>Profile</li>
                                     <li>Settings</li>
-                                    <li>Logout</li>
+                                    <li>
+                                        <button onClick={() => signOut()}>Logout</button>
+                                    </li>
                                 </ul>}
                         </div>
 

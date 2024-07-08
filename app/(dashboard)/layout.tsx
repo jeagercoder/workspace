@@ -1,10 +1,11 @@
 
 import { getServerSession } from "next-auth/next"
+import { redirect } from 'next/navigation'
+import { headers } from "next/headers";
 
 import Navbar from "@/components/navbar/navbar";
-
 import { AuthOptions } from "@/app/api/auth/[...nextauth]/options";
-import { redirect } from 'next/navigation'
+import Sidebar from "@/components/sidebar/sidebar";
 
 
 
@@ -15,14 +16,15 @@ export default async function DashboardLayout({
 }>) {
     const session = await getServerSession(AuthOptions)
     if (!session) {
-        redirect("/login")
+        redirect(`/login`)
     }
     return (
         <>
-          
-                <Navbar />
+            <Navbar />
+            <div className="flex h-screen w-screen">
+                <Sidebar />
                 {children}
-         
+            </div>
         </>
     );
 }

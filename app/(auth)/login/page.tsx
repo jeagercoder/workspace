@@ -3,13 +3,15 @@
 import { GoogleSignInButton, PrimaryFullButton } from "@/components/buttons";
 import { PrimaryInput } from "@/components/inputs";
 import { LabelSm } from "@/components/labels";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
 
 
 export default function LoginPage() {
+    const router = useRouter()
 
     async function handleLogin(event: React.SyntheticEvent) {
         event.preventDefault()
@@ -22,7 +24,9 @@ export default function LoginPage() {
                 callbackUrl: "/"
             })
             if (!response?.error) {
-                document.location.replace("/")
+                const callbackUrl = response?.url ? response.url : "/"
+                console.log(callbackUrl)
+                router.push(callbackUrl)
             } else {
                 alert("Salah bos...")
             }
