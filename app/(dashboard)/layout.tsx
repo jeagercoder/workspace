@@ -1,7 +1,6 @@
 
 import { getServerSession } from "next-auth/next"
 import { redirect } from 'next/navigation'
-import { headers } from "next/headers";
 
 import Navbar from "@/components/navbar/navbar";
 import { AuthOptions } from "@/app/api/auth/[...nextauth]/options";
@@ -21,7 +20,7 @@ export default async function DashboardLayout({
     return (
         <>
             <Navbar />
-            <div className="flex h-screen w-screen">
+            <div className="flex">
                 <Sidebar />
                 {children}
             </div>
