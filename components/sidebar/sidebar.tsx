@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link";
-import { ArrowCicleLeft, BellIcon, ChatIcon, FolderIcon, RectangleStackIcon, SettingIcon, UserGroupIcon } from "../icons";
+import { ArrowCicleLeft, ArrowCicleRight, BellIcon, ChatIcon, FolderIcon, RectangleStackIcon, SettingIcon, UserGroupIcon } from "../icons";
 import { useState } from "react";
 
 
@@ -19,7 +19,11 @@ export default function Sidebar() {
         <>
             <div className={`flex flex-col h-screen min-w-72 bg-white border pt-20 px-5 duration-300 ${!active && '-ml-[17rem]'}`}>
                 <div className="flex justify-end -mr-8 z-10">
-                    <button onClick={() => hanldeSidebar()}><ArrowCicleLeft className="size-6 stroke-2 stroke-blue-500 rounded-full" /></button>
+                    <button onClick={() => hanldeSidebar()}>
+                        {active
+                            ? <ArrowCicleLeft className="size-6 stroke-2 stroke-blue-500 rounded-full bg-white"/>
+                            : <ArrowCicleRight className="size-6 stroke-2 stroke-blue-500 rounded-full bg-white" />}
+                    </button>
                 </div>
                 <ul className="flex flex-col py-2">
                     <li className="flex items-center">
