@@ -2,7 +2,7 @@
 
 
 import { PrimaryButton } from "@/components/buttons"
-import { FolderPlusIcon, SearchIcon } from "@/components/icons"
+import { ArchiveBoxArrowIcon, FolderPlusIcon, SearchIcon } from "@/components/icons"
 import { ColorInput, CustomInput, PrimaryInput, PrimaryTextArea } from "@/components/inputs"
 import { LabelSm } from "@/components/labels"
 import Modal from "@/components/modals"
@@ -52,6 +52,9 @@ export default function ProjectPage() {
                                 name="search"
                                 className="p-1 outline-none" />
                         </div>
+                    </div>
+                    <div className="flex">
+                        <button><ArchiveBoxArrowIcon className="size-8 stroke-1 stroke-orange-500"/></button>
                     </div>
                 </div>
                 <h1>Project page</h1>

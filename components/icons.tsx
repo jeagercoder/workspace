@@ -19,7 +19,7 @@ export function FolderPlusIcon(props: any) {
 }
 
 
-export function ArchiveArrowIcon(props: any) {
+export function ArchiveBoxArrowIcon(props: any) {
     return (
         <>
             <svg xmlns="http://www.w3.org/2000/svg"
