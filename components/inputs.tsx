@@ -1,3 +1,4 @@
+import exp from "constants"
 
 
 export function PrimaryInput({ type, name }: { type: string, name: string }) {
@@ -32,6 +33,22 @@ export function ColorInput({ name }: { name: string }) {
         <>
             <input type="color"
                 name={name} />
+        </>
+    )
+}
+
+
+export function CustomInput({ name, className, type }:
+    {
+        name: string,
+        className: string,
+        type: string
+    }) {
+    return (
+        <>
+            <input type={type}
+                name={name}
+                className={className} />
         </>
     )
 }
