@@ -13,23 +13,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id            String          @id @default(uuid())
+  id            String    @id @default(uuid())
   name          String
-  username      String         @unique
-  email         String         @unique
-  isSuperuser   Boolean        @default(false)
+  username      String    @unique
+  email         String    @unique
+  isSuperuser   Boolean   @default(false)
   password      String
   emailVerified DateTime?
   image         String?
   Session       Session[]
   Account       Account?
- 
-  createdAt DateTime @default(now())
+
+  createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
+  Project   Project[]
 }
- 
+
 model Account {
   id                       String  @id @default(uuid())
   userId                   String  @unique
@@ -45,33 +45,43 @@ model Account {
   session_state            String?
   refresh_token_expires_in Int?
   user                     User?   @relation(fields: [userId], references: [id])
- 
-  createdAt DateTime @default(now())
+
+  createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
- 
+
   @@unique([provider, providerAccountId])
   @@index([userId])
 }
- 
+
 model Session {
   id           String   @id @default(uuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id])
- 
-  createdAt DateTime @default(now())
+
+  createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
- 
+
   @@index([userId])
 }
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@unique([identifier, token])
 }
- 
 
+model Project {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  color       String
+  ownerId     String?
+  owner       User?   @relation(fields: [ownerId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+}
