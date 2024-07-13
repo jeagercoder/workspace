@@ -32,7 +32,7 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
             if (err instanceof BaseHttpError) {
                 return NextResponse.json(err.detail, { status: err.status_code })
             }
-            return NextResponse.json({"detail": "Internal server error"}, {status: 500})
+            throw err
         }
     }
     return res
