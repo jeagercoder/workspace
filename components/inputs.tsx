@@ -1,12 +1,13 @@
 import exp from "constants"
 
 
-export function PrimaryInput({ type, name }: { type: string, name: string }) {
+export function PrimaryInput({ type, name, required = false }: { type: string, name: string, required?: boolean }) {
     return (
         <>
             <input type={type}
                 name={name}
-                className="p-2 outline-none border rounded-md focus-visible:border-blue-500" />
+                className="p-2 outline-none border rounded-md focus-visible:border-blue-500"
+                required={required} />
         </>
     )
 }
