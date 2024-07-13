@@ -3,6 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 export interface Middleware {
-    (request: NextRequest, response: NextResponse): NextResponse
+    (req: NextRequest, res: NextResponse): Promise<{req: NextRequest, res: NextResponse}>
 }
 

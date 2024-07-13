@@ -1,11 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Middleware } from "./types/middleware";
+import { getToken } from "next-auth/jwt";
 
-export type {Middleware} from '@/types/middleware'
+export type { Middleware } from '@/types/middleware'
 
-function authMiddleware(request: NextRequest, response: NextResponse): NextResponse {
-    console.log('auth', request.nextUrl.pathname)
-    return response
+import { BaseHttpError, UnauthenticatedHttpError } from "./errors/http";
+
+
+const secret = process.env.SECRET
+
+async function authMiddleware(req: NextRequest, res: NextResponse) {
+    const token = await getToken({ req, secret })
+    if (!token) {
+        throw new UnauthenticatedHttpError()
+    }
+    return { req, res }
 }
 
 
@@ -14,14 +23,21 @@ const middlewareRegistered: Middleware[] = [
 ]
 
 
-export function middleware(request: NextRequest): NextResponse {
-    let response = NextResponse.next()
-     for (const mid of middlewareRegistered) {
-        response = mid(request, response)
-     }
-    return response
+export async function middleware(req: NextRequest): Promise<NextResponse> {
+    let res = NextResponse.next()
+    for (const mid of middlewareRegistered) {
+        try {
+            ({ req, res } = await mid(req, res))
+        } catch (err) {
+            if (err instanceof BaseHttpError) {
+                return NextResponse.json(err.detail, { status: err.status_code })
+            }
+            return NextResponse.json({"detail": "Internal server error"}, {status: 500})
+        }
+    }
+    return res
 }
 
 export const config = {
-    matcher: ['/((?!api/auth|_next/static|_next/image|favicon.ico).*)'],
-  }
+    matcher: ['/api/project/:path*'],
+}
