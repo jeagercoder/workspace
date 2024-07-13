@@ -8,9 +8,6 @@ export class BaseHttpError extends Error {
     constructor(detail: object| null = null) {
         super("An error occurred")
         this.name = "http_error"
-        if (detail) {
-            this.detail = detail
-        }
     }
 }
 
@@ -18,4 +15,13 @@ export class BaseHttpError extends Error {
 export class UnauthenticatedHttpError extends BaseHttpError {
     status_code: number = 401;
     detail: object = {"detail": "Unauthenticated"};
+}
+
+export class BadRequestHttpError extends BaseHttpError {
+    status_code: number = 400;
+
+    constructor(detail: object) {
+        super()
+        this.detail = detail
+    }
 }
