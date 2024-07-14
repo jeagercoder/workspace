@@ -1,7 +1,7 @@
 import { BadRequestHttpError, BaseHttpError, UnauthenticatedHttpError } from "@/errors/http";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server"
-import { ZodObject } from "zod"
+import { BaseService } from "./service/service";
 
 
 const secret = process.env.SECRET
@@ -40,14 +40,14 @@ class BaseApiHandler {
 
 export class ApiHanlder extends BaseApiHandler {
     user_token: object | null
-    post_validator: ZodObject<any> | null
-    put_validator: ZodObject<any> | null
+    post_service: any
+    put_service: any
 
     constructor(request: NextRequest) {
         super(request)
         this.user_token = null
-        this.post_validator = null
-        this.put_validator = null
+        this.post_service = null
+        this.put_service = null
     }
 
     async handler() {
@@ -65,22 +65,12 @@ export class ApiHanlder extends BaseApiHandler {
         }
     }
 
-    async getValidator(): Promise<ZodObject<any>> {
-        const validator_name = `${this.request_method}_validator`
-        const validator = this[validator_name]
-        if (!validator) {
-            throw new Error(`${validator_name} not available at ${this.handler_name}.`)
+    async getService({data}: {data: any | null}): Promise<BaseService> {
+        const service_name = `${this.request_method}_service`
+        const service = this[service_name]
+        if (!service) {
+            throw new Error(`${service_name} not available at ${this.handler_name}.`)
         }
-        return validator
-    }
-
-    async post(request: NextRequest) {
-        const dataPost = await request.json()
-        const validator = await this.getValidator()
-        const dataValid = await validator.safeParseAsync(dataPost)
-        if (!dataValid.success) {
-            throw new BadRequestHttpError(dataValid.error)
-        }
-        return NextResponse.json(dataValid.data, {status: 201})
+        return new service({data})
     }
 }
