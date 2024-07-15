@@ -27,6 +27,7 @@ export class BadRequestHttpError extends BaseHttpError {
 }
 
 export class ServiceValidationError extends BaseHttpError {
+    status_code: number = 400;
 
     constructor(detail: z.ZodIssueBase) {
         super()
