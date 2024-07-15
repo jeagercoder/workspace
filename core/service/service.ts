@@ -8,9 +8,15 @@ export class BaseService {
     __data: object | null = null
     __errors: object | null = null
     __has_validate: boolean = false
+    __context: object = {}
 
-    constructor(data: object) {
+    constructor(data: object, context: object = {}) {
         this.nonSafeData = data
+        this.__context = context
+    }
+
+    get context() {
+        return this.__context
     }
 
     get data() {
@@ -40,7 +46,7 @@ export class BaseService {
                 zodObject = zodObject.extend({[key]: value})
             }
         }
-        const validData = await zodObject.safeParseAsync(data.data)
+        const validData = await zodObject.safeParseAsync(data)
         if (!validData.success) {
             this.__errors = validData.error
             return false
