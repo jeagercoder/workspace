@@ -1,10 +1,12 @@
 
+import { cache } from 'react'
 import {z} from 'zod'
 
 
 export class BaseService {
 
     nonSafeData: object
+    validatedData: object = {}
     __data: object | null = null
     __errors: object | null = null
     __has_validate: boolean = false
@@ -23,9 +25,6 @@ export class BaseService {
         if (!this.__has_validate) {
             throw new Error("Can't read .data before call .isValid()")
         }
-        if (this.__data === null) {
-            throw new Error("Can't read .data if data is not valid, please check error with .errors")
-        }
         return this.__data
     }
 
@@ -34,12 +33,12 @@ export class BaseService {
     }
 
     async isValid() {
-        const valid = await this.validate({data: this.nonSafeData})
+        const valid = await this.__validate({data: this.nonSafeData})
         this.__has_validate = true
         return valid
     }
 
-    async validate({data}: {data: object}) {
+    async __validate({data}: {data: object}) {
         let zodObject = z.object({})
         for (let [key, value] of Object.entries(this)) {
             if (value instanceof z.ZodType) {
@@ -51,7 +50,22 @@ export class BaseService {
             this.__errors = validData.error
             return false
         }
-        this.__data = validData.data
+        const validCustomData = await this.validate(data=validData.data)
+        this.validatedData = validCustomData
         return true
+    }
+
+    async validate(data: any) {
+        return data
+    }
+
+    async create() {
+        const result = await this.processCreate(this.validatedData)
+        this.__data = result
+        console.log(this.__data)
+    }
+
+    async processCreate(_validatedData: object): Promise<object> {
+        throw new Error("when .create() is called .processCreate() must be implemented.")
     }
 }
