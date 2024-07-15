@@ -1,7 +1,7 @@
 import { BadRequestHttpError, BaseHttpError, UnauthenticatedHttpError } from "@/errors/http";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server"
-import { BaseService } from "../../utils/api/service/service";
+import { BaseService } from "../service/service";
 
 
 const secret = process.env.SECRET
