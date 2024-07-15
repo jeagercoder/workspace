@@ -41,13 +41,11 @@ class BaseApiHandler {
 export class ApiHanlder extends BaseApiHandler {
     user_token: object | null
     post_service: any
-    put_service: any
+    service_class: any = null
 
     constructor(request: NextRequest) {
         super(request)
         this.user_token = null
-        this.post_service = null
-        this.put_service = null
     }
 
     async handler() {
@@ -65,12 +63,21 @@ export class ApiHanlder extends BaseApiHandler {
         }
     }
 
-    async getService({data}: {data: any | null}): Promise<BaseService> {
-        const service_name = `${this.request_method}_service`
-        const service = this[service_name]
-        if (!service) {
-            throw new Error(`${service_name} not available at ${this.handler_name}.`)
+    async getServiceClass() {
+        if (!this.service_class) {
+            throw new Error(`.service_class not avaliable at ${this.handler_name}.`)
         }
-        return new service({data})
+        return this.service_class
+    }
+
+    async getService(data: object, context={}): Promise<BaseService> {
+        const service = await this.getServiceClass()
+        return new service(data, context)
+    }
+
+    async getContext() {
+        return {
+            user_token: this.user_token
+        }
     }
 }
