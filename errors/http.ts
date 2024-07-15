@@ -1,11 +1,11 @@
 
-
+import {z} from 'zod'
 
 export class BaseHttpError extends Error {
     status_code: number = 500;
     detail: object = {"detail": "Internal server error"};
 
-    constructor(detail: object| null = null) {
+    constructor() {
         super("An error occurred")
         this.name = "http_error"
     }
@@ -23,5 +23,17 @@ export class BadRequestHttpError extends BaseHttpError {
     constructor(detail: object) {
         super()
         this.detail = detail
+    }
+}
+
+export class ServiceValidationError extends BaseHttpError {
+
+    constructor(detail: z.ZodIssueBase) {
+        super()
+        const issue: z.ZodIssue = {
+            path: detail.path,
+            message: detail.message ? detail.message : "Unknown error",
+            code: z.ZodIssueCode.custom}
+        this.detail = new z.ZodError([issue])
     }
 }
